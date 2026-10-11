@@ -75,8 +75,8 @@ bool AandB_is_A_Big(const BigInteger& A,const BigInteger& B) {
 
 BigInteger Add(BigInteger A,BigInteger B) {
 	BigInteger C;
-		
-	std::intmax_t L = std::min(A.Dight.size(), B.Dight.size());
+
+	std::size_t L = std::min(A.Dight.size(), B.Dight.size());
 	const BigInteger* D = (A.Dight.size() >= B.Dight.size()) ? &A : &B;
 
 	A.Dight.push_back({ {0} });
@@ -85,7 +85,7 @@ BigInteger Add(BigInteger A,BigInteger B) {
 	B.Dight.push_back({ {0} });
 	B.Dight.push_back({ {0} });
 	B.Dight.push_back({ {0} });
-	for (std::intmax_t i = 0; i < L; i++) {
+	for (std::size_t i = 0; i < L; i++) {
 		const BYTE* BA = &A.Dight[i];
 		const BYTE* BB = &B.Dight[i];
 		WORD* WA = (WORD*)(BA);
@@ -118,8 +118,10 @@ BigInteger Sub(BigInteger A,BigInteger B) {
 	BigInteger C;
 
 
-	
-	std::intmax_t L = std::max(A.Dight.size(), B.Dight.size());
+
+	std::size_t Ln = std::min(A.Dight.size(), B.Dight.size());
+	std::size_t Lx = std::max(A.Dight.size(), B.Dight.size());
+
 	const BigInteger* D = (A.Dight.size() >= B.Dight.size()) ? &A : &B;
 
 	A.Dight.push_back({ {0} });
@@ -134,9 +136,20 @@ BigInteger Sub(BigInteger A,BigInteger B) {
 	B.Dight.push_back({ {0} });
 	B.Dight.push_back({ {0} });
 	B.Dight.push_back({ {0} });
-	for (std::intmax_t i = 0; i < L; i++) {
+	WORD X = {};
+	for (std::size_t i = 0; i < Ln; i++) {
 		const BYTE* BA = &A.Dight[i];
-		const BYTE* BB = &B.Dight[i];
+		const BYTE* BB = &B.Dight[i];	
+		
+		if (i >= Ln) {
+			if (A.Dight.size() > B.Dight.size()) {
+				BB = &X.A;
+			}
+			else {
+				BA = &X.A;
+			}
+			X = { {0}, }
+		}
 		WORD* WA = (WORD*)(BA );
 		WORD* WA2 = (WORD*)(BA + 1);
 		WORD* WB = (WORD*)(BB );
@@ -151,6 +164,7 @@ BigInteger Sub(BigInteger A,BigInteger B) {
 		C.Dight.push_back(WC.A);
 
 	}
+		
 	A.Dight.pop_back();
 	A.Dight.pop_back();	
 	A.Dight.pop_back();
@@ -254,7 +268,7 @@ BigInteger MakeBigIntegerFromString(const std::string& S, const BYTE Radix = { {
 bool IsEqual(const BigInteger& A, const BigInteger& B) {
 	if (A.Dight.size() != B.Dight.size()) { return false; }
 
-	for (std::intmax_t i = 0; i < A.Dight.size(); i++) {
+	for (std::size_t i = 0; i < A.Dight.size(); ++i) {
 		if (A.Dight[i] != B.Dight[i]) { return false; }
 	}
 	return true;
@@ -324,6 +338,28 @@ BigInteger Or(BigInteger A, BigInteger B) {
 		A = Div(A, Tow);
 		B = Div(B, Tow);
 	} while (IsZero(A) || IsZero(B));
+
+	return E;
+}
+
+
+BigInteger Not(BigInteger A) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		S = Mul(S, Tow);
+
+		if (!IsEqual(C, One)) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+	} while (!IsZero(A));
 
 	return E;
 }
@@ -397,26 +433,7 @@ BigInteger Nor(BigInteger A, BigInteger B) {
 
 	return E;
 }
-BigInteger Not(BigInteger A) {
 
-	BigInteger E = MakeBigIntegerFromString("0");
-	BigInteger S = MakeBigIntegerFromString("1");
-	BigInteger One = MakeBigIntegerFromString("1");
-	BigInteger Tow = MakeBigIntegerFromString("2");
-	do {
-
-		auto C = Mod(A, Tow);
-		S = Mul(S, Tow);
-
-		if (!IsEqual(C, One)) {
-			E = Add(E, S);
-		}
-
-		A = Div(A, Tow);
-	} while (!IsZero(A));
-
-	return E;
-}
 int main() {
 	BigInteger A = MakeBigIntegerFromString("100");
 	BigInteger B = MakeBigIntegerFromString("100");

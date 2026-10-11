@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="Logicaly_BigInteger.vcxproj" />
+  <Project Path="Logicaly_BigInteger.vcxproj" Id="c61bcdd0-9c20-407a-a3ce-aee1b4d4dce8" />
 </Solution>
