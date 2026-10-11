@@ -251,7 +251,172 @@ BigInteger MakeBigIntegerFromString(const std::string& S, const BYTE Radix = { {
 	return R;
 }
 
+bool IsEqual(const BigInteger& A, const BigInteger& B) {
+	if (A.Dight.size() != B.Dight.size()) { return false; }
 
+	for (std::intmax_t i = 0; i < A.Dight.size(); i++) {
+		if (A.Dight[i] != B.Dight[i]) { return false; }
+	}
+	return true;
+}
+
+BigInteger And(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (IsEqual(C, D)) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return E;
+}
+BigInteger Nand(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (!IsEqual(C, D)) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return E;
+}
+BigInteger Or(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (IsEqual(C, One)||IsEqual(D,One) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return E;
+}
+BigInteger NotXor(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (IsEqual(C, One)||IsEqual(D,One) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return Not(Not(E));
+}
+BigInteger Xor(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (IsEqual(C, One)||IsEqual(D,One) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return Not(E);
+}
+
+BigInteger Nor(BigInteger A, BigInteger B) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		auto D = Mod(B, Tow);
+
+		S = Mul(S, Tow);
+
+		if (!(IsEqual(C, One)||IsEqual(D,One))) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+		B = Div(B, Tow);
+	} while (IsZero(A) || IsZero(B));
+
+	return E;
+}
+BigInteger Not(BigInteger A) {
+
+	BigInteger E = MakeBigIntegerFromString("0");
+	BigInteger S = MakeBigIntegerFromString("1");
+	BigInteger One = MakeBigIntegerFromString("1");
+	BigInteger Tow = MakeBigIntegerFromString("2");
+	do {
+
+		auto C = Mod(A, Tow);
+		S = Mul(S, Tow);
+
+		if (!IsEqual(C, One)) {
+			E = Add(E, S);
+		}
+
+		A = Div(A, Tow);
+	} while (!IsZero(A));
+
+	return E;
+}
 int main() {
 	BigInteger A = MakeBigIntegerFromString("100");
 	BigInteger B = MakeBigIntegerFromString("100");
